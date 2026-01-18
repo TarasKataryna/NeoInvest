@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace WalletService.Features.Wallets.GetWallet;
+namespace NeoInvest.WalletService.Features.Wallets.GetWallet;
 
 public static class GetWalletEndpoint
 {

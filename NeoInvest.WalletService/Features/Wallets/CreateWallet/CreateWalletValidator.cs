@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace WalletService.Features.Wallets.CreateWallet;
+namespace NeoInvest.WalletService.Features.Wallets.CreateWallet;
 
 public class CreateWalletValidator : AbstractValidator<CreateWalletCommand>
 {

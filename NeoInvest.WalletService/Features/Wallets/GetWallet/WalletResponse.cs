@@ -1,6 +1,6 @@
-﻿using WalletService.Domain.Enums;
+﻿using NeoInvest.WalletService.Domain.Enums;
 
-namespace WalletService.Features.Wallets.GetWallet;
+namespace NeoInvest.WalletService.Features.Wallets.GetWallet;
 
 public class WalletResponse
 {

@@ -1,17 +1,20 @@
-﻿using NeoInvest.WalletService.Domain.ValueObjects;
-using WalletService.Domain.Enums;
+﻿using NeoInvest.WalletService.Domain.Enums;
+using NeoInvest.WalletService.Domain.Events;
+using NeoInvest.WalletService.Domain.ValueObjects;
 
-namespace WalletService.Domain.Enitites;
+namespace NeoInvest.WalletService.Domain.Enitites;
 
-public class Wallet
+public class Wallet : BaseEntity
 {
-	public Guid Id { get; private set; }
+	public Guid WalletId { get; private set; }
 	public Guid UserId { get; private set; }
 	public Currency Currency { get; private set; }
 	public decimal Balance { get; private set; }
 	public DateTimeOffset CreatedDate { get; private set; }
 
-	private int WithdrawLimit => 100000;
+	public Guid Version { get; private set; } = Guid.NewGuid();
+
+	private static int WithdrawLimit => 100000;
 
 	private Wallet() { }
 
@@ -22,7 +25,7 @@ public class Wallet
 
 		var wallet = new Wallet
 		{
-			Id = Guid.NewGuid(),
+			WalletId = Guid.NewGuid(),
 			UserId = userId,
 			Currency = currency,
 			Balance = 0,
@@ -47,6 +50,15 @@ public class Wallet
 			return Result.Failure($"Withdrawal amount exceeds the limit. Limit is - {WithdrawLimit}");
 
 		Balance -= money.Amount;
+		UpdateVersion();
+
+		AddDomainEvent(new WalletWithdrawEvent
+		{
+			WalletId = WalletId,
+			Amount = money.Amount,
+			Currency = money.Currency
+		});
+
 		return Result.Success();
 	}
 
@@ -59,6 +71,17 @@ public class Wallet
 			return Result.Failure("Deposit amount must be positive.");
 
 		Balance += money.Amount;
+		UpdateVersion();
+
+		AddDomainEvent(new WalletDepositEvent
+		{
+			WalletId = WalletId,
+			Amount = money.Amount,
+			Currency = money.Currency
+		});
+
 		return Result.Success();
 	}
+
+	public void UpdateVersion() => Version = Guid.NewGuid();
 }

@@ -1,4 +1,4 @@
-﻿using WalletService.Domain.Enums;
+﻿using NeoInvest.WalletService.Domain.Enums;
 
 namespace NeoInvest.WalletService.Domain.ValueObjects;
 

@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using WalletService.Data;
-using WalletService.Domain.Enitites;
-using WalletService.Domain.Enums;
+using NeoInvest.WalletService;
+using NeoInvest.WalletService.Data;
+using NeoInvest.WalletService.Domain.Enitites;
+using NeoInvest.WalletService.Domain.Enums;
 
-namespace WalletService.Features.Wallets.CreateWallet;
+namespace NeoInvest.WalletService.Features.Wallets.CreateWallet;
 
 public class CreateWalletHandler(WalletDbContext dbContext) : IRequestHandler<CreateWalletCommand, Result<Guid>>
 {
@@ -25,6 +26,6 @@ public class CreateWalletHandler(WalletDbContext dbContext) : IRequestHandler<Cr
 		dbContext.Wallets.Add(createResult.Value!);
         await dbContext.SaveChangesAsync(ct);
 
-        return Result<Guid>.Success(createResult.Value!.Id);
+        return Result<Guid>.Success(createResult.Value!.WalletId);
     }
 }

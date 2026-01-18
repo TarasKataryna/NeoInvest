@@ -1,4 +1,4 @@
-﻿namespace WalletService;
+﻿namespace NeoInvest.WalletService;
 
 public class Result
 {

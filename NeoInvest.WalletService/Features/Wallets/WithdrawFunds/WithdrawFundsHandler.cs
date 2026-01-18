@@ -1,9 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NeoInvest.WalletService.Data;
+using NeoInvest.WalletService.Domain.Enums;
 using NeoInvest.WalletService.Domain.ValueObjects;
-using WalletService;
-using WalletService.Data;
-using WalletService.Domain.Enums;
 
 namespace NeoInvest.WalletService.Features.Wallets.WithdrawFunds;
 
@@ -11,7 +10,7 @@ public class WithdrawFundsHandler(WalletDbContext dbContext) : IRequestHandler<W
 {
 	public async Task<Result> Handle(WithdrawFundsCommand request, CancellationToken cancellationToken)
 	{
-		var wallet = await dbContext.Wallets.FirstOrDefaultAsync(w => w.Id == request.WalletId, cancellationToken);
+		var wallet = await dbContext.Wallets.FirstOrDefaultAsync(w => w.WalletId == request.WalletId, cancellationToken);
 		if (wallet is null)
 		{
 			return Result.Failure("Wallet not found.");

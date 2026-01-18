@@ -1,4 +1,4 @@
-﻿namespace WalletService.Domain.Enums;
+﻿namespace NeoInvest.WalletService.Domain.Enums;
 
 public enum Currency
 {

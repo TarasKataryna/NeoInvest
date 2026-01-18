@@ -1,10 +1,10 @@
 using FluentValidation;
+using NeoInvest.WalletService.Data;
+using NeoInvest.WalletService.Features.Wallets.CreateWallet;
 using NeoInvest.WalletService.Features.Wallets.DepositFunds;
+using NeoInvest.WalletService.Features.Wallets.GetWallet;
 using NeoInvest.WalletService.Features.Wallets.WithdrawFunds;
 using WalletService.Configuration;
-using WalletService.Data;
-using WalletService.Features.Wallets.CreateWallet;
-using WalletService.Features.Wallets.GetWallet;
 
 var builder = WebApplication.CreateBuilder(args);
 

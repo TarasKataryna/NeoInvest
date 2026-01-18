@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using WalletService;
 
 namespace NeoInvest.WalletService.Features.Wallets.DepositFunds;
 

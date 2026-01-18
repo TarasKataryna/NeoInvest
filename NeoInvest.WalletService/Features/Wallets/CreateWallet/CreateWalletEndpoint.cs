@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace WalletService.Features.Wallets.CreateWallet;
+namespace NeoInvest.WalletService.Features.Wallets.CreateWallet;
 
 public record CreateWallerRequest(Guid UserId, string Currency);
 

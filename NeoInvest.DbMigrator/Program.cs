@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WalletService.Data;
+using NeoInvest.WalletService.Data;
 
 var builder = Host.CreateApplicationBuilder(args);
 
