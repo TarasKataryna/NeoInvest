@@ -1,11 +1,13 @@
 ﻿using NeoInvest.WalletService.Domain.Enums;
 using NeoInvest.WalletService.Domain.Events;
 using NeoInvest.WalletService.Domain.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace NeoInvest.WalletService.Domain.Enitites;
 
 public class Wallet : BaseEntity
 {
+	[Key]
 	public Guid WalletId { get; private set; }
 	public Guid UserId { get; private set; }
 	public Currency Currency { get; private set; }
@@ -13,6 +15,8 @@ public class Wallet : BaseEntity
 	public DateTimeOffset CreatedDate { get; private set; }
 
 	public Guid Version { get; private set; } = Guid.NewGuid();
+
+	public virtual ICollection<Transaction> Transactions { get; private set; } = [];
 
 	private static int WithdrawLimit => 100000;
 

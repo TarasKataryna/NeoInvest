@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using NeoInvest.WalletService.Data;
 using NeoInvest.WalletService.Features.Wallets.CreateWallet;
 using NeoInvest.WalletService.Features.Wallets.DepositFunds;
@@ -12,7 +13,15 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.AddNpgsqlDbContext<WalletDbContext>("walletdb");
+builder.Services.AddScoped<PublishDomainEventsInterceptor>();
+builder.Services.AddDbContext<WalletDbContext>((sp, options) =>
+{
+    var interceptor = sp.GetRequiredService<PublishDomainEventsInterceptor>();
+    options.AddInterceptors(interceptor);
+
+    options.UseNpgsql(builder.Configuration.GetConnectionString("walletdb"));
+});
+builder.Services.AddNpgsqlDataSource("walletdb");
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
