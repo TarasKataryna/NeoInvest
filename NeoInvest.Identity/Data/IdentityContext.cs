@@ -6,6 +6,10 @@ namespace NeoInvest.Identity.Data;
 
 public class IdentityContext : IdentityDbContext<User, Role, Guid>
 {
+	public IdentityContext(DbContextOptions<IdentityContext> options) : base(options) { }
+
+	protected IdentityContext()	{ }
+
 	protected override void OnModelCreating(ModelBuilder builder)
 	{
 		base.OnModelCreating(builder);

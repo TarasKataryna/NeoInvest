@@ -11,6 +11,8 @@ public static class AuthExtension
 		services.AddOptions<JwtOptions>().Bind(configuration.GetSection(nameof(JwtOptions)));
 		var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
 
+		services.AddSingleton<JwtTokenService>();
+
 		services.AddAuthentication(opt =>
 		{
 			opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

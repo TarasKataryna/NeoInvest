@@ -1,4 +1,5 @@
 using FluentValidation;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -54,6 +55,19 @@ builder.Services.AddAuthentication(options =>
 		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:Key"]!))
 	};
 });
+
+builder.Services.AddMassTransit(configure =>
+{
+	configure.AddConsumers(typeof(Program).Assembly);
+
+	configure.UsingRabbitMq((context, cfg) =>
+	{
+		cfg.Host(builder.Configuration.GetConnectionString("messaging"));
+		cfg.ConfigureEndpoints(context);
+	});
+});
+
+builder.Services.AddLogging(configure => configure.AddConsole());
 
 var app = builder.Build();
 

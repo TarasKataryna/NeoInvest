@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using NeoInvest.Identity.Infrastructure;
+using MassTransit;
+using NeoInvest.Identity.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,9 +28,20 @@ builder.Services.AddDbContext<IdentityContext>((sp, options) =>
 	options.UseNpgsql(builder.Configuration.GetConnectionString("userDb"));
 });
 
-builder.Services.AddProblemDetails();
+builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<IdentityContext>();
+
+builder.Services.AddMassTransit(configure =>
+{
+	configure.UsingRabbitMq((context, cfg) =>
+	{
+		cfg.Host(builder.Configuration.GetConnectionString("messaging"));
+		cfg.ConfigureEndpoints(context);
+	});
+});
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
+
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
