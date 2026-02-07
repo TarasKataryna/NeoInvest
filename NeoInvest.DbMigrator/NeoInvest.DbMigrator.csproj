@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NeoInvest.Identity\NeoInvest.Identity.csproj" />
     <ProjectReference Include="..\NeoInvest.ServiceDefaults\NeoInvest.ServiceDefaults.csproj" />
     <ProjectReference Include="..\NeoInvest.WalletService\NeoInvest.WalletService.csproj" />
   </ItemGroup>
