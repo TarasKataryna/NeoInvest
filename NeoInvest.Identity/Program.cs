@@ -32,6 +32,12 @@ builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<IdentityCont
 
 builder.Services.AddMassTransit(configure =>
 {
+	configure.AddEntityFrameworkOutbox<IdentityContext>(options =>
+	{
+		options.UsePostgres();
+		options.UseBusOutbox();
+	});
+
 	configure.UsingRabbitMq((context, cfg) =>
 	{
 		cfg.Host(builder.Configuration.GetConnectionString("messaging"));
@@ -51,6 +57,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseExceptionHandler();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRegisterUser();
 app.MapLoginUser();

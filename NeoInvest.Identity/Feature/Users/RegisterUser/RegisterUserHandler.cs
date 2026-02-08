@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using NeoInvest.Identity.Entities;
 using NeoInvest.Identity.Infrastructure;
 using NeoInvest.Shared.Events;
@@ -11,11 +12,13 @@ public class RegisterUserHandler(
 	UserManager<User> userManager, 
 	RoleManager<Role> roleManager, 
 	JwtTokenService jwtTokenService,
+	DbContext dbContext,
 	IPublishEndpoint publishEndpoint) : IRequestHandler<RegisterUserCommand, Result<string>>
 {
 	private readonly UserManager<User> _userManager = userManager;
 	private readonly RoleManager<Role> _roleManager = roleManager;
 	private readonly JwtTokenService _jwtTokenService = jwtTokenService;
+	private readonly DbContext _dbContext = dbContext;
 	private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
 
 	public async Task<Result<string>> Handle(RegisterUserCommand request, CancellationToken ct)
@@ -33,20 +36,31 @@ public class RegisterUserHandler(
 			FirstName = request.FirstName,
 			LastName = request.LastName
 		};
-
-		var result = await _userManager.CreateAsync(user, request.Password);
 		
-		if (!result.Succeeded)
-			return Result<string>.Failure(string.Join(", ", result.Errors.Select(e => e.Description)));
+		using var transaction = await _dbContext.Database.BeginTransactionAsync(ct);
 
-		foreach (var role in request.Roles ?? [])
+		try
 		{
-			if (!await _roleManager.RoleExistsAsync(role))
-				return Result<string>.Failure($"Issue occured assigning '{role}' role.");
+			var result = await _userManager.CreateAsync(user, request.Password);
+
+			if (!result.Succeeded)
+				return Result<string>.Failure(string.Join(", ", result.Errors.Select(e => e.Description)));
+
+			foreach (var role in request.Roles ?? [])
+			{
+				if (!await _roleManager.RoleExistsAsync(role))
+					return Result<string>.Failure($"Issue occured assigning '{role}' role.");
+			}
+
+			await _publishEndpoint.Publish(new UserRegistered(user.Id, user.Email), ct);
+
+			await transaction.CommitAsync(ct);
+			return Result<string>.Success(_jwtTokenService.GenerateToken(user, request.Roles));
 		}
-
-		await _publishEndpoint.Publish(new UserRegistered(user.Id, user.Email), ct);
-
-		return Result<string>.Success(_jwtTokenService.GenerateToken(user, request.Roles));
+		catch (Exception ex)
+		{
+			await transaction.RollbackAsync(ct);
+			return Result<string>.Failure($"An error occurred while registering the user: {ex.Message}");
+		}
 	}
 }

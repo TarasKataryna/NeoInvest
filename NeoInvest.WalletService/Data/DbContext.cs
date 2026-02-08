@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using NeoInvest.WalletService.Domain.Enitites;
 
 namespace NeoInvest.WalletService.Data;
@@ -8,6 +9,8 @@ public class WalletDbContext(DbContextOptions<WalletDbContext> options) : DbCont
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.ApplyConfigurationsFromAssembly(typeof(WalletDbContext).Assembly);
+
+		modelBuilder.AddTransactionalOutboxEntities();
 	}
 
 	public DbSet<Wallet> Wallets { get; set; }

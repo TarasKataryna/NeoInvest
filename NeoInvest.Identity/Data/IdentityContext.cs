@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NeoInvest.Identity.Entities;
 
@@ -22,5 +23,7 @@ public class IdentityContext : IdentityDbContext<User, Role, Guid>
 			entity.HasIndex(entity => entity.Email)
 				.IsUnique();
 		});
+
+		builder.AddTransactionalOutboxEntities();
 	}
 }

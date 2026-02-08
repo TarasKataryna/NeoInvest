@@ -16,10 +16,11 @@ public static class WithdrawFundsEndpoint
 				WalletId = id,
 				Currency = request.currency,
 				Amount = request.amount
-			});
+			}, ct);
 
 			return result.IsSuccess ? Results.Ok() : Results.BadRequest(result.Error);
 		})
+		.RequireAuthorization()
 		.WithName("WithdrawFunds")
 		.WithTags("Wallets")
 		.Produces(StatusCodes.Status200OK)

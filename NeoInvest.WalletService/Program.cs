@@ -60,6 +60,12 @@ builder.Services.AddMassTransit(configure =>
 {
 	configure.AddConsumers(typeof(Program).Assembly);
 
+	configure.AddEntityFrameworkOutbox<DbContext>(options =>
+	{
+		options.UsePostgres();
+		options.UseBusOutbox();
+	});
+
 	configure.UsingRabbitMq((context, cfg) =>
 	{
 		cfg.Host(builder.Configuration.GetConnectionString("messaging"));
@@ -81,6 +87,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

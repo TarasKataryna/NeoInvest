@@ -20,6 +20,7 @@ public static class DepositFundsEndpoint
 
 			return result.IsSuccess ? Results.Ok() : Results.BadRequest(result.Error);
 		})
+		.RequireAuthorization()
 		.WithName("DepositFunds")
 		.WithTags("Wallets")
 		.Produces(StatusCodes.Status200OK)
