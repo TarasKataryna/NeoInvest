@@ -23,9 +23,9 @@ builder.Services.AddDbContext<WalletDbContext>((sp, options) =>
 	var interceptor = sp.GetRequiredService<PublishDomainEventsInterceptor>();
 	options.AddInterceptors(interceptor);
 
-	options.UseNpgsql(builder.Configuration.GetConnectionString("walletDb"));
+	options.UseNpgsql(builder.Configuration.GetConnectionString("walletdb"));
 });
-builder.Services.AddNpgsqlDataSource("walletDb");
+builder.Services.AddNpgsqlDataSource("walletdb");
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
@@ -60,7 +60,7 @@ builder.Services.AddMassTransit(configure =>
 {
 	configure.AddConsumers(typeof(Program).Assembly);
 
-	configure.AddEntityFrameworkOutbox<DbContext>(options =>
+	configure.AddEntityFrameworkOutbox<WalletDbContext>(options =>
 	{
 		options.UsePostgres();
 		options.UseBusOutbox();
@@ -83,6 +83,8 @@ app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
 {
 	app.MapOpenApi();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

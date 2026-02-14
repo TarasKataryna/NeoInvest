@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="NeoInvest.DbMigrator/NeoInvest.DbMigrator.csproj" Id="619e7e75-d9b7-45c7-b7aa-56fb9371ebbe" />
+  <Project Path="NeoInvest.Gateway/NeoInvest.Gateway.csproj" />
   <Project Path="NeoInvest.Identity/NeoInvest.Identity.csproj" />
   <Project Path="NeoInvest.ServiceDefaults/NeoInvest.ServiceDefaults.csproj" Id="75cccc58-0631-4630-83e3-390d16777a24" />
   <Project Path="NeoInvest.Shared/NeoInvest.Shared.csproj" Id="6a973fc5-0787-4b2f-86f0-c4deba056a03" />

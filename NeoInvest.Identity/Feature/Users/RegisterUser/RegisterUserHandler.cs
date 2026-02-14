@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NeoInvest.Identity.Data;
 using NeoInvest.Identity.Entities;
 using NeoInvest.Identity.Infrastructure;
 using NeoInvest.Shared.Events;
@@ -12,7 +13,7 @@ public class RegisterUserHandler(
 	UserManager<User> userManager, 
 	RoleManager<Role> roleManager, 
 	JwtTokenService jwtTokenService,
-	DbContext dbContext,
+	IdentityContext dbContext,
 	IPublishEndpoint publishEndpoint) : IRequestHandler<RegisterUserCommand, Result<string>>
 {
 	private readonly UserManager<User> _userManager = userManager;

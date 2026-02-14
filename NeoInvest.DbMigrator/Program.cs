@@ -7,8 +7,8 @@ using NeoInvest.WalletService.Data;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.AddNpgsqlDbContext<WalletDbContext>("walletDb");
-builder.AddNpgsqlDbContext<IdentityDbContext>("userDb");
+builder.AddNpgsqlDbContext<WalletDbContext>("walletdb");
+builder.AddNpgsqlDbContext<IdentityDbContext>("userdb");
 
 builder.AddServiceDefaults();
 

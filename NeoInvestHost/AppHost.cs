@@ -1,8 +1,8 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var server = builder.AddPostgres("postgres-server");
-var walletDb = server.AddDatabase("walletDb");
-var userDB = server.AddDatabase("userDb");
+var walletDb = server.AddDatabase("walletdb");
+var userDB = server.AddDatabase("userdb");
 
 var messaging = builder.AddRabbitMQ(
 		"messaging",
@@ -24,5 +24,10 @@ var walletService = builder.AddProject<Projects.NeoInvest_WalletService>("wallet
 	.WithReference(walletDb)
 	.WithReference(messaging)
 	.WaitForCompletion(dbMigrator);
+
+builder.AddProject<Projects.NeoInvest_Gateway>("gateway")
+	.WithReference(walletService)
+	.WithReference(identityService)
+	.WithExternalHttpEndpoints();
 
 builder.Build().Run();

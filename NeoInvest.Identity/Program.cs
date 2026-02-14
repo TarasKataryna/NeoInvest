@@ -25,7 +25,7 @@ builder.Services.AddMediatR(c =>
 
 builder.Services.AddDbContext<IdentityContext>((sp, options) =>
 {
-	options.UseNpgsql(builder.Configuration.GetConnectionString("userDb"));
+	options.UseNpgsql(builder.Configuration.GetConnectionString("userdb"));
 });
 
 builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<IdentityContext>();
@@ -46,6 +46,7 @@ builder.Services.AddMassTransit(configure =>
 });
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddAuthorization();
 
 builder.Services.AddProblemDetails();
 
@@ -54,6 +55,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
 	app.MapOpenApi();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseExceptionHandler();
