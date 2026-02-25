@@ -2,7 +2,8 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var server = builder.AddPostgres("postgres-server");
 var walletDb = server.AddDatabase("walletdb");
-var userDB = server.AddDatabase("userdb");
+var userDb = server.AddDatabase("userdb");
+var sagaDb = server.AddDatabase("sagadb");
 
 var messaging = builder.AddRabbitMQ(
 		"messaging",
@@ -12,11 +13,12 @@ var messaging = builder.AddRabbitMQ(
 
 var dbMigrator = builder.AddProject<Projects.NeoInvest_DbMigrator>("dbmigrator")
 	.WithReference(walletDb)
-	.WithReference(userDB)
+	.WithReference(userDb)
+	.WithReference(sagaDb)
 	.WaitFor(server);
 
 var identityService = builder.AddProject<Projects.NeoInvest_Identity>("identity")
-	.WithReference(userDB)
+	.WithReference(userDb)
 	.WithReference(messaging)
 	.WaitForCompletion(dbMigrator);
 
@@ -25,9 +27,16 @@ var walletService = builder.AddProject<Projects.NeoInvest_WalletService>("wallet
 	.WithReference(messaging)
 	.WaitForCompletion(dbMigrator);
 
+var sagaService = builder.AddProject<Projects.NeoInvest_WalletService>("saga")
+	.WithReference(sagaDb)
+	.WithReference(messaging)
+	.WaitForCompletion(dbMigrator);
+
 builder.AddProject<Projects.NeoInvest_Gateway>("gateway")
 	.WithReference(walletService)
 	.WithReference(identityService)
 	.WithExternalHttpEndpoints();
+
+builder.AddProject<Projects.NeoInvest_Saga>("neoinvest-saga");
 
 builder.Build().Run();

@@ -21,6 +21,7 @@
     <ProjectReference Include="..\NeoInvest.DbMigrator\NeoInvest.DbMigrator.csproj" />
     <ProjectReference Include="..\NeoInvest.Gateway\NeoInvest.Gateway.csproj" />
     <ProjectReference Include="..\NeoInvest.Identity\NeoInvest.Identity.csproj" />
+    <ProjectReference Include="..\NeoInvest.Saga\NeoInvest.Saga.csproj" />
     <ProjectReference Include="..\NeoInvest.WalletService\NeoInvest.WalletService.csproj" />
   </ItemGroup>
 
